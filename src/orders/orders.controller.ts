@@ -71,13 +71,19 @@ export class OrdersController {
   }
 
   @Patch(':id')
-  changeOrderStatus(
+  async changeOrderStatus(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateOrderDto: UpdateOrderDto,
+    @Body() statusDto: StatusDto,
   ) {
-    return this.ordersClient.send('changeOrderStatus', {
-      id,
-      ...updateOrderDto,
-    });
+    try {
+      return await firstValueFrom(
+        this.ordersClient.send('changeOrderStatus', {
+          id,
+          ...statusDto,
+        }),
+      );
+    } catch (error) {
+      throw new RpcException(error);
+    }
   }
 }
