@@ -15,7 +15,6 @@ import {
 import { ORDER_SERVICE } from 'src/config/services';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { firstValueFrom } from 'rxjs';
 import { OrderPaginationDto } from './dto/order-pagination.dto';
 import { StatusDto } from './dto/status.dto';
@@ -71,13 +70,19 @@ export class OrdersController {
   }
 
   @Patch(':id')
-  changeOrderStatus(
+  async changeOrderStatus(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateOrderDto: UpdateOrderDto,
+    @Body() statusDto: StatusDto,
   ) {
-    return this.ordersClient.send('changeOrderStatus', {
-      id,
-      ...updateOrderDto,
-    });
+    try {
+      return await firstValueFrom(
+        this.ordersClient.send('changeOrderStatus', {
+          id,
+          ...statusDto,
+        }),
+      );
+    } catch (error) {
+      throw new RpcException(error);
+    }
   }
 }
