@@ -15,7 +15,6 @@ import {
 import { ORDER_SERVICE } from 'src/config/services';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { firstValueFrom } from 'rxjs';
 import { OrderPaginationDto } from './dto/order-pagination.dto';
 import { StatusDto } from './dto/status.dto';
